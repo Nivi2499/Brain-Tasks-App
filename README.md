@@ -1,91 +1,214 @@
-DevOps Practice Project – Dist Directory
+\# Brain Tasks App – DevOps Practice Project
 
-This repository contains the production-ready build files (dist folder) for DevOps practice and deployment exercises.
 
-It is intentionally structured to help learners focus on CI/CD pipelines, hosting, containerization, and infrastructure setup rather than application development.
 
-📁 What This Repository Contains
+\## Project Overview
 
-dist/ – Compiled and production-ready static files
 
-HTML
 
-CSS
+This repository contains production-ready static application files from the `dist` directory. The application is containerized and deployed to AWS EKS using Docker, Kubernetes, and AWS CI/CD services.
 
-JavaScript
 
-Assets (images, fonts, etc.)
 
-These files are ready to deploy to:
+\## Technologies Used
 
-Web servers (Nginx / Apache)
 
-Cloud platforms (AWS S3, Azure Blob, GCP Storage)
 
-Containerized environments (Docker + Nginx)
+\- Docker and Nginx
 
-Kubernetes clusters
+\- Kubernetes
 
-CI/CD pipeline demonstrations
+\- Amazon ECR
 
-🎯 Purpose of This Repository
+\- Amazon EKS
 
-This repository is designed for:
+\- AWS CodeBuild
 
-DevOps beginners
+\- AWS CodePipeline
 
-CI/CD practice
+\- Amazon CloudWatch
 
-Deployment pipeline testing
+\- GitHub
 
-Docker & Kubernetes deployment exercises
 
-Web server configuration practice
 
-Reverse proxy and load balancer setup
+\## Project Architecture
 
-The goal is to simulate real-world deployment scenarios using already built application files.
 
-❓ Why is there NO package.json?
 
-You may notice that this repository does not include:
+GitHub → AWS CodePipeline → AWS CodeBuild → Amazon ECR → Amazon EKS → Load Balancer → Application
 
-package.json
 
-node_modules
 
-Source code (src/)
+Amazon CloudWatch is used for monitoring and log collection.
 
-Build tools configuration
 
-✅ Reason:
 
-This repository only contains the final production build output (dist), not the development source code.
+\## Docker Configuration
 
-In a typical project:
 
-Developers write source code.
 
-The project is built using tools like:
+The application is served using Nginx on port 3000.
 
-Node.js
 
-Webpack
 
-Vite
+Build Docker image:
 
-React (or other frameworks)
 
-A dist/ folder is generated.
 
-Only the production build is deployed to servers.
+```bash
 
-This repository represents step 4 only.
+docker build -t brain-tasks-app:v1 .
 
-Since this is already the compiled output:
+```
 
-No dependencies are required
 
-No build process is required
 
-No package.json is needed
+Run locally:
+
+
+
+```bash
+
+docker run -d -p 3000:3000 brain-tasks-app:v1
+
+```
+
+
+
+Access: http://localhost:3000
+
+
+
+\## AWS Configuration
+
+
+
+\- Region: ap-southeast-2 (Sydney)
+
+\- EKS Cluster: brain-tasks-cluster
+
+\- Node Group: brain-tasks-nodes
+
+\- ECR Repository: brain-tasks-app
+
+\- CodeBuild Project: brain-tasks-build
+
+\- CodePipeline: brain-tasks-pipeline
+
+
+
+\## Kubernetes Deployment
+
+
+
+Kubernetes manifests are available in the `k8s/` directory.
+
+
+
+Deploy the application:
+
+
+
+```bash
+
+kubectl apply -f k8s/deployment.yaml
+
+kubectl apply -f k8s/service.yaml
+
+```
+
+
+
+Verify:
+
+
+
+```bash
+
+kubectl get pods
+
+kubectl get services
+
+```
+
+
+
+\## Application URL
+
+
+
+http://add9f7c4098d5434580051407df10363-1723526793.ap-southeast-2.elb.amazonaws.com
+
+
+
+\## CI/CD Pipeline
+
+
+
+The AWS CodePipeline is connected to the GitHub main branch.
+
+
+
+When code changes are pushed:
+
+
+
+1\. CodePipeline detects the changes.
+
+2\. CodeBuild builds the Docker image.
+
+3\. The image is pushed to Amazon ECR.
+
+4\. The Kubernetes deployment is updated on Amazon EKS.
+
+
+
+\## CloudWatch Monitoring
+
+
+
+CloudWatch Observability is configured with these log groups:
+
+
+
+\- `/aws/containerinsights/brain-tasks-cluster/application`
+
+\- `/aws/containerinsights/brain-tasks-cluster/dataplane`
+
+\- `/aws/containerinsights/brain-tasks-cluster/host`
+
+\- `/aws/containerinsights/brain-tasks-cluster/performance`
+
+\- `/aws/codebuild/brain-tasks-build`
+
+
+
+\## Project Outcome
+
+
+
+\- Dockerized the application using Nginx.
+
+\- Published the Docker image to Amazon ECR.
+
+\- Deployed the application to Amazon EKS.
+
+\- Exposed the application through a public Load Balancer.
+
+\- Implemented CI/CD using AWS CodeBuild and CodePipeline.
+
+\- Configured CloudWatch logging and observability.
+
+
+
+\## GitHub Repository
+
+
+
+https://github.com/Nivi2499/Brain-Tasks-App
+
+
+
+Note: The Kubernetes LoadBalancer currently provisions a Classic Load Balancer, which does not have an ELBv2 ARN.
+
